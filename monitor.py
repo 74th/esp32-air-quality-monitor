@@ -8,7 +8,7 @@ from sk1812mini import SK1812
 
 class AirMonitor:
     def __init__(self):
-        self._i2c = I2C(0, sda=Pin(8), scl=Pin(9))
+        self._i2c = I2C(0, sda=Pin(8), scl=Pin(9), freq=100_000)
         # self._lcd_i2c = I2C(1, sda=Pin(6), scl=Pin(7))
         self._lcd_i2c = self._i2c
         self._css811 = CCS811(self._i2c)
