@@ -1,7 +1,7 @@
 from machine import I2C, Pin
 import time
 
-_AQM1602_ADDR = 0x3E
+AQM1602_ADDR = 0x3E
 
 
 class LCD:
@@ -10,11 +10,13 @@ class LCD:
         i2c: I2C,
     ):
         self._i2c = i2c
+
+    def setup(self):
         self._init_lcd()
         self.clear()
 
     def _write_command(self, cmd: bytes):
-        self._i2c.writeto(_AQM1602_ADDR, b"\x00" + cmd)
+        self._i2c.writeto(AQM1602_ADDR, b"\x00" + cmd)
         time.sleep_ms(30)
 
     def print(self, line1: str, line2: str = ""):
@@ -25,7 +27,7 @@ class LCD:
         self._write_command(b"\x80")
         for b in line1.encode():
             buf[1] = b
-            self._i2c.writeto(_AQM1602_ADDR, buf)
+            self._i2c.writeto(AQM1602_ADDR, buf)
         if len(line2) == 0:
             return
 
@@ -33,7 +35,7 @@ class LCD:
         self._write_command(b"\xc0")
         for b in line2.encode():
             buf[1] = b
-            self._i2c.writeto(_AQM1602_ADDR, buf)
+            self._i2c.writeto(AQM1602_ADDR, buf)
 
     def clear(self):
         self._write_command(b"\x01")
@@ -63,6 +65,7 @@ def test():
     scl = Pin(7)
     i2c = I2C(1, sda=sda, scl=scl, freq=40000)
     lcd = LCD(i2c)
+    lcd.setup()
 
     lcd.print("aaaaa")
     time.sleep(3)

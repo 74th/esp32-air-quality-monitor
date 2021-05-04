@@ -1,7 +1,7 @@
 import time
 from machine import I2C, Pin
 
-_ADDR = 0x5B
+CCS811_ADDR = 0x5B
 
 
 class CCS811:
@@ -16,13 +16,13 @@ class CCS811:
         self.check_for_status_error()
         self.app_valid()
 
-        self._i2c.writeto_mem(_ADDR, 0xF4, b"")  # APP_START
+        self._i2c.writeto_mem(CCS811_ADDR, 0xF4, b"")  # APP_START
         time.sleep_ms(100)
         self.set_driver_mode(1)
         time.sleep_ms(100)
 
     def data_available(self) -> bool:
-        v = self._i2c.readfrom_mem(_ADDR, 0x00, 1)
+        v = self._i2c.readfrom_mem(CCS811_ADDR, 0x00, 1)
         if v[0] & 1:
             e = self.read_register(0xE0)
             print("error register", hex(e[0]))
@@ -50,19 +50,19 @@ class CCS811:
         return co2, t_voc
 
     def write_register(self, offset: int, value: int):
-        return self._i2c.writeto_mem(_ADDR, offset, bytes([value]))
+        return self._i2c.writeto_mem(CCS811_ADDR, offset, bytes([value]))
 
     def read_register(self, offset: int):
-        return self._i2c.readfrom_mem(_ADDR, offset, 1)
+        return self._i2c.readfrom_mem(CCS811_ADDR, offset, 1)
 
     def multi_write_register(self, offset: int, data: bytes):
-        self._i2c.writeto_mem(_ADDR, offset, data)
+        self._i2c.writeto_mem(CCS811_ADDR, offset, data)
 
     def multi_read_register(self, offset: int, length: int):
-        return self._i2c.readfrom_mem(_ADDR, offset, length)
+        return self._i2c.readfrom_mem(CCS811_ADDR, offset, length)
 
     def status(self):
-        b = self._i2c.readfrom(_ADDR, 1)
+        b = self._i2c.readfrom(CCS811_ADDR, 1)
         return b[0]
 
 
