@@ -4,6 +4,8 @@
 
 https://www.switch-science.com/catalog/3298/
 
+Languages: MicroPython 1.15
+
 ## Features
 
 - LCD ディスプレイに、二酸化炭素濃度と、tVOC を表示。
