@@ -38,3 +38,11 @@ https://www.switch-science.com/catalog/3298/
 ## LICENSE
 
 MIT
+
+## 余談
+
+最初は Raspberry Pi PICO を使っていましたが、Google Home と連携させたくなったら、やっぱり WiFi 使えないとと思い、それならば ESP32 で良いのでは？？となって、ESP32 に載せ替えました。SK1812Mini の実装以外はそのまま動きました。
+
+## History
+
+- 2021/05/05 Raspberry Pi PICO から ESP32 に乗せ替え
