@@ -8,12 +8,14 @@ from sk1812mini import SK1812
 
 class AirMonitor:
     def __init__(self):
-        self._i2c = I2C(0, sda=Pin(8), scl=Pin(9), freq=100_000)
+        sda = Pin(21)
+        scl = Pin(22)
+        self._i2c = I2C(0, sda=sda, scl=scl, freq=10_000)
         # self._lcd_i2c = I2C(1, sda=Pin(6), scl=Pin(7))
         self._lcd_i2c = self._i2c
         self._css811 = CCS811(self._i2c)
         self._display = LCD(self._lcd_i2c)
-        self._indicator = SK1812(Pin(17, mode=Pin.OUT))
+        self._indicator = SK1812(Pin(16, mode=Pin.OUT))
 
     def setup(self) -> bool:
         print("start setup")
@@ -72,11 +74,11 @@ class AirMonitor:
                 print(l1, l2)
                 try:
                     time.sleep_ms(200)
-                    print("@@1")
-                    self._display.setup()
-                    print("@@2")
                     self._display.print(l1, l2)
-                    print("@@3")
+                    if r[0] > 1200:
+                        self._indicator.red()
+                    else:
+                        self._indicator.dark_blue()
                 except OSError as e:
                     time.sleep_ms(100)
                     # self._indicator.yellow()
