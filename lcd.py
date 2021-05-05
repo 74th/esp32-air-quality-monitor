@@ -61,9 +61,10 @@ class LCD:
 
 
 def test():
-    sda = Pin(6)
-    scl = Pin(7)
-    i2c = I2C(1, sda=sda, scl=scl, freq=40000)
+    global sda, scl, i2c, lcd
+    sda = Pin(21)
+    scl = Pin(22)
+    i2c = I2C(0, sda=sda, scl=scl, freq=100000)
     lcd = LCD(i2c)
     lcd.setup()
 
