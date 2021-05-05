@@ -1,4 +1,4 @@
-import array, time
+import time
 from machine import Pin
 import neopixel
 
