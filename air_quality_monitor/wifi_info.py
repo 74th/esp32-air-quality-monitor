@@ -1,0 +1,2 @@
+SSID = "hoge"
+PASSWORD = "hogehoge"

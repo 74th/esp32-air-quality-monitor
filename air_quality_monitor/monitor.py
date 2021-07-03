@@ -1,9 +1,11 @@
 from machine import I2C, Pin
 import utime
 
-from ccs811 import CCS811, CCS811_ADDR
-from lcd import LCD, AQM1602_ADDR
-from sk1812mini import SK1812
+from .ccs811 import CCS811, CCS811_ADDR
+from .lcd import LCD, AQM1602_ADDR
+from .sk1812mini import SK1812
+from .wifi import WIFI
+from . import wifi_info
 
 
 class AirMonitor:
@@ -16,6 +18,7 @@ class AirMonitor:
         self._css811 = CCS811(self._i2c)
         self._display = LCD(self._lcd_i2c)
         self._indicator = SK1812(Pin(16, mode=Pin.OUT))
+        self._wifi = WIFI(wifi_info.SSID, wifi_info.PASSWORD)
 
     def setup(self) -> bool:
         print("start setup")
@@ -36,20 +39,21 @@ class AirMonitor:
             if CCS811_ADDR not in i2c_addrs:
                 self._indicator.red()
                 self._display.print("fail i2c.scan", "CCS811")
-                time.sleep(5)
+                utime.sleep(5)
                 continue
             try:
                 self._css811.setup()
                 self._display.print("setup done")
             except OSError:
                 print("css811 setup failed")
-                time.sleep(5)
+                utime.sleep(5)
             break
         else:
             print("all css811 setup failed")
             return False
+        self._wifi.up()
         print("setup done")
-        time.sleep(3)
+        utime.sleep(3)
         return True
 
     def loop(self):
@@ -67,27 +71,27 @@ class AirMonitor:
             except OSError as e:
                 # self._indicator.yellow()
                 print("error on CCS811", e)
-                time.sleep(5)
+                utime.sleep(5)
             if data_available:
                 l1 = "CO2 : {:5d}-{:4d}".format(r[0], i%100)
                 l2 = "tVOC: {:5d}".format(r[1])
                 print(l1, l2)
                 try:
-                    time.sleep_ms(200)
+                    utime.sleep_ms(200)
                     self._display.print(l1, l2)
                     if r[0] > 1200:
                         self._indicator.red()
                     else:
                         self._indicator.dark_blue()
                 except OSError as e:
-                    time.sleep_ms(100)
+                    utime.sleep_ms(100)
                     # self._indicator.yellow()
                     print("error on display", e)
                     self._display.setup()
                     self._display.print(l1, l2)
-                    time.sleep(1)
+                    utime.sleep(1)
                     self._display.print(l1, l2)
-            time.sleep(5)
+            utime.sleep(5)
 
 
 def main():

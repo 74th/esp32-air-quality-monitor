@@ -1,3 +1,3 @@
-import monitor
+from air_quality_monitor.monitor import main
 
-monitor.main()
+main()

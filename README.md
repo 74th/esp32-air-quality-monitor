@@ -23,7 +23,7 @@ Languages: MicroPython 1.15
 
 ## Circuit Diagram
 
-![](./trial_production.png)
+![](./docs/trial_production.png)
 
 ### Using Fritzing Parts
 
@@ -36,6 +36,17 @@ Languages: MicroPython 1.15
 - SparkFun CCS811 Arduino Library : https://github.com/sparkfun/SparkFun_CCS811_Arduino_Library/
 - SK6812MINI-E データシート（秋月）: https://akizukidenshi.com/download/ds/opscoled/sk6812mini-e.pdf
 - AQM0802A-RN-GBW データシート（秋月） \_ https://akizukidenshi.com/download/ds/xiamen/AQM0802.pdf
+
+
+## Development
+
+```
+pipx install rshell
+
+rshell --port /dev/ttyUSB0
+
+
+```
 
 ## LICENSE
 
