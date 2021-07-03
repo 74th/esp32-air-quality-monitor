@@ -4,6 +4,6 @@
   "python.languageServer": "Pylance",
   "python.analysis.typeCheckingMode": "basic",
   "python.linting.mypyEnabled": false,
-  // "python.analysis.extraPaths": [".vscode/Pico-Stub/stubs"]
-  "python.analysis.extraPaths": [".vscode/esp32-stubs"]
+  "python.analysis.extraPaths": ["stubs"],
+  "python.pythonPath": "/opt/homebrew/bin/python"
 }

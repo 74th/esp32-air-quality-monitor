@@ -1,5 +1,5 @@
 from machine import I2C, Pin
-import time
+import utime
 
 from ccs811 import CCS811, CCS811_ADDR
 from lcd import LCD, AQM1602_ADDR
@@ -97,6 +97,6 @@ def main():
         m.setup()
     except Exception as e:
         print(e)
-        time.sleep(10)
+        utime.sleep(10)
         return
     m.loop()
