@@ -5,7 +5,8 @@ from .ccs811 import CCS811, CCS811_ADDR
 from .lcd import LCD, AQM1602_ADDR
 from .sk1812mini import SK1812
 from .wifi import WIFI
-from . import wifi_info
+from .post import SimplePostServer
+from . import parameters
 
 
 class AirMonitor:
@@ -18,7 +19,8 @@ class AirMonitor:
         self._css811 = CCS811(self._i2c)
         self._display = LCD(self._lcd_i2c)
         self._indicator = SK1812(Pin(16, mode=Pin.OUT))
-        self._wifi = WIFI(wifi_info.SSID, wifi_info.PASSWORD)
+        self._wifi = WIFI(parameters.SSID, parameters.WIFI_PASSWORD)
+        self._post = SimplePostServer(parameters.RECORDER_HOST, parameters.TARGET, parameters.AUTH)
 
     def setup(self) -> bool:
         print("start setup")
@@ -83,6 +85,13 @@ class AirMonitor:
                         self._indicator.red()
                     else:
                         self._indicator.dark_blue()
+
+                    self._wifi.up()
+                    self._post.post({
+                        "co2": r[0],
+                        "t_voc": r[1],
+                    })
+
                 except OSError as e:
                     utime.sleep_ms(100)
                     # self._indicator.yellow()
