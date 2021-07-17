@@ -3,7 +3,7 @@ from machine import Pin
 import neopixel
 
 
-class SK1812:
+class SK6812:
     def __init__(self, gpio: Pin):
         self._np = neopixel.NeoPixel(gpio, 1)
 
@@ -28,7 +28,7 @@ class SK1812:
 
 
 def main():
-    led = SK1812(Pin(16))
+    led = SK6812(Pin(16))
     led.setup()
     for i in range(100):
         if i % 3 == 0:

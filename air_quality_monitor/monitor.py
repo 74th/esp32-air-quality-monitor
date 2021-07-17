@@ -4,7 +4,7 @@ import utime
 
 from .ccs811 import CCS811, CCS811_ADDR
 from .lcd import LCD, AQM1602_ADDR
-from .sk1812mini import SK1812
+from .sk6812mini import SK6812
 from .wifi import WIFI
 from .post import SimplePostServer
 from . import parameters
@@ -19,7 +19,7 @@ class AirMonitor:
         self._lcd_i2c = self._i2c
         self._css811 = CCS811(self._i2c)
         self._display = LCD(self._lcd_i2c)
-        self._indicator = SK1812(Pin(16, mode=Pin.OUT))
+        self._indicator = SK6812(Pin(16, mode=Pin.OUT))
         self._wifi = WIFI(parameters.SSID, parameters.WIFI_PASSWORD)
         self._dht11 = DHT11(Pin(0))
         self._post = SimplePostServer(parameters.RECORDER_HOST, parameters.TARGET, parameters.AUTH)
