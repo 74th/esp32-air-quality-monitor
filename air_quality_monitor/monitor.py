@@ -1,4 +1,5 @@
 from machine import I2C, Pin
+from dht import DHT11
 import utime
 
 from .ccs811 import CCS811, CCS811_ADDR
@@ -20,6 +21,7 @@ class AirMonitor:
         self._display = LCD(self._lcd_i2c)
         self._indicator = SK1812(Pin(16, mode=Pin.OUT))
         self._wifi = WIFI(parameters.SSID, parameters.WIFI_PASSWORD)
+        self._dht11 = DHT11(Pin(0))
         self._post = SimplePostServer(parameters.RECORDER_HOST, parameters.TARGET, parameters.AUTH)
 
     def setup(self) -> bool:
@@ -62,45 +64,57 @@ class AirMonitor:
         self._indicator.dark_blue()
         i = 0
         while True:
+            utime.sleep(5)
             print("try", i)
             i += 1
             data_available = False
             r = (0, 0)
+            temperature = 0
+            humidity = 0
             try:
                 data_available = self._css811.data_available()
-                if data_available:
-                    r = self._css811.read_algorithm_results()
+                if not data_available:
+                    utime.sleep(3500)
+                    continue
+
+                r = self._css811.read_algorithm_results()
+                utime.sleep_ms(1500)
+                self._dht11.measure()
+                temperature = self._dht11.temperature()
+                humidity = self._dht11.humidity()
             except OSError as e:
-                # self._indicator.yellow()
-                print("error on CCS811", e)
+                print("error", e)
                 utime.sleep(5)
-            if data_available:
-                l1 = "CO2 : {:5d}-{:4d}".format(r[0], i%100)
-                l2 = "tVOC: {:5d}".format(r[1])
-                print(l1, l2)
-                try:
-                    utime.sleep_ms(200)
-                    self._display.print(l1, l2)
-                    if r[0] > 1200:
-                        self._indicator.red()
-                    else:
-                        self._indicator.dark_blue()
+                continue
 
-                    self._wifi.up()
-                    self._post.post({
-                        "co2": r[0],
-                        "t_voc": r[1],
-                    })
+            l1 = "C2:{:4d} VO{:4d}".format(r[0], r[1])
+            l2 = "TMP:{:3d},{:3d}".format(temperature, humidity)
+            print(l1, l2)
 
-                except OSError as e:
-                    utime.sleep_ms(100)
-                    # self._indicator.yellow()
-                    print("error on display", e)
-                    self._display.setup()
-                    self._display.print(l1, l2)
-                    utime.sleep(1)
-                    self._display.print(l1, l2)
-            utime.sleep(5)
+            try:
+                utime.sleep_ms(200)
+                self._display.print(l1, l2)
+                if r[0] > 1200:
+                    self._indicator.red()
+                else:
+                    self._indicator.dark_blue()
+
+                self._wifi.up()
+                self._post.post({
+                    "co2": r[0],
+                    "t_voc": r[1],
+                    "temperature": temperature,
+                    "humidity": humidity,
+                })
+
+            except OSError as e:
+                utime.sleep_ms(100)
+                # self._indicator.yellow()
+                print("error on display", e)
+                self._display.setup()
+                self._display.print(l1, l2)
+                utime.sleep(1)
+                self._display.print(l1, l2)
 
 
 def main():
