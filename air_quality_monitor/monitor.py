@@ -4,7 +4,7 @@ import utime
 
 from .ccs811 import CCS811, CCS811_ADDR
 from .lcd import LCD, AQM1602_ADDR
-from .sk6812mini import SK6812
+from .color_led import FullColorLED
 from .wifi import WIFI
 from .post import SimplePostServer
 from . import parameters
@@ -19,14 +19,13 @@ class AirMonitor:
         self._lcd_i2c = self._i2c
         self._css811 = CCS811(self._i2c)
         self._display = LCD(self._lcd_i2c)
-        self._indicator = SK6812(Pin(16, mode=Pin.OUT))
+        self._indicator = FullColorLED(Pin(12), Pin(14), Pin(27))
         self._wifi = WIFI(parameters.SSID, parameters.WIFI_PASSWORD)
         self._dht11 = DHT11(Pin(0))
         self._post = SimplePostServer(parameters.RECORDER_HOST, parameters.TARGET, parameters.AUTH)
 
     def setup(self) -> bool:
         print("start setup")
-        self._indicator.setup()
         self._indicator.yellow()
 
         print("setup display")
@@ -87,8 +86,8 @@ class AirMonitor:
                 utime.sleep(5)
                 continue
 
-            l1 = "C2:{:4d} VO{:4d}".format(r[0], r[1])
-            l2 = "TMP:{:3d},{:3d}".format(temperature, humidity)
+            l1 = "C2:{:4d} VO:{:4d}".format(r[0], r[1])
+            l2 = "TMP:{:3d} HUM:{:3d}".format(temperature, humidity)
             print(l1, l2)
 
             try:
