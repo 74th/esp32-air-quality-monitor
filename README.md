@@ -37,15 +37,16 @@ Languages: MicroPython 1.15
 - SK6812MINI-E データシート（秋月）: https://akizukidenshi.com/download/ds/opscoled/sk6812mini-e.pdf
 - AQM0802A-RN-GBW データシート（秋月） \_ https://akizukidenshi.com/download/ds/xiamen/AQM0802.pdf
 
-
 ## Development
 
 ```
 pipx install rshell
 
 rshell --port /dev/ttyUSB0
+```
 
-
+```
+rshell --port /dev/ttyUSB0 -f command.sh
 ```
 
 ## LICENSE

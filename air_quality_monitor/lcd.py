@@ -48,7 +48,7 @@ class LCD:
         # Internal OSC frequency
         self._write_command(b"\x14")
         # Contrast set 1
-        self._write_command(b"\x78")
+        self._write_command(b"\x70")
         # Power/ICON/Contrast Control
         self._write_command(b"\x56")
         # Follow control
