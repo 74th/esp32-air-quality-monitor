@@ -15,10 +15,10 @@ Languages: MicroPython 1.15
 
 - ESP32-WROOM-32D DevKit: https://www.amazon.co.jp/gp/product/B0718T232Z/
 - CCS811 搭載空気品質センサモジュール: https://www.switch-science.com/catalog/3298/
-- RGB LED SK6812MINI-E: https://akizukidenshi.com/catalog/g/gI-15478/
+- RGB LED SK6812MINI-E: https://akizukidenshi.com/catalog/g/g115478/
   - WS2812 と同様の仕様で動作します。
   - ただ、手元にあったからこの LED を使っただけで、特別これを選んだわけではない。
-- I2C Character Display AQM0802A-RN-GBW: https://akizukidenshi.com/catalog/g/gP-06669/
+- I2C Character Display AQM0802A-RN-GBW: https://akizukidenshi.com/catalog/g/g106669/
   - I2C が楽そうだった。
 
 ## Circuit Diagram
